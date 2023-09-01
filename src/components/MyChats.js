@@ -8,6 +8,7 @@ import { Button } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
 import expressAsyncHandler from 'express-async-handler';
 import ChatLoading from "../components/Miscellaneous/ChatlLoading";
+import GroupChatModal from "../components/Miscellaneous/GroupChatModal";
 import { getSender } from '../config/chatLogics';
 
 const MyChats = ({fetchAgain}) => {
@@ -47,9 +48,9 @@ const MyChats = ({fetchAgain}) => {
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       flexDirection="column"
       alignItems="center"
-      p={3}
+      padding={3}
       bg="white"
-      w={{ base: "100%", md: "31%" }}
+      width={{ base: "100%", md: "31%" }}
       borderRadius="lg"
       borderWidth="1px"
     >
@@ -64,6 +65,7 @@ const MyChats = ({fetchAgain}) => {
         alignItems="center"
       >
         My Chats
+        <GroupChatModal>
           <Button
             display="flex"
             fontSize={{ base: "17px", md: "10px", lg: "17px" }}
@@ -71,6 +73,7 @@ const MyChats = ({fetchAgain}) => {
           >
             New Group Chat
           </Button>
+        </GroupChatModal>
       </Box>
       <Box
         display="flex"
