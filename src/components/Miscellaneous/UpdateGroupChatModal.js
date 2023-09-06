@@ -23,7 +23,7 @@ import { ChatState } from "../../Context/ChatProvider";
 import UserBadgeItem from '../UserComponents/UserBadgeItem';
 import UserListItem from '../UserComponents/UserListItem ';
 
-const UpdateGroupChatModal = ({fetchAgain,setFetchAgain}) => {
+const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
      const { isOpen, onOpen, onClose } = useDisclosure()
      const [groupChatName, setGroupChatName] = useState();
      const [selectedUsers, setSelectedUsers] = useState([]);
@@ -143,6 +143,7 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain}) => {
             console.log(data);
             user1._id === user._id ? setSelectedChat() : setSelectedChat(data);
             setFetchAgain(!fetchAgain);
+            fetchMessages();
             setLoading(false); 
         } catch (error) {
             console.log(error);

@@ -28,6 +28,7 @@ import axios from "axios";
 import { useToast } from "@chakra-ui/toast";
 import ProfileModal from './ProfileModal';
 import UserListItem from '../UserComponents/UserListItem ';
+import { getSender } from '../../config/chatLogics';
 
 
 const SideDrawer = () => {
@@ -43,6 +44,7 @@ const SideDrawer = () => {
     chats,
     setChats,
   } = ChatState();
+  
 
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -147,6 +149,21 @@ const SideDrawer = () => {
               <BellIcon fontSize="2xl" m={1} />
             </MenuButton>
             <MenuList pl={2}>
+              {!notification.length && "No New Messages"}
+              {notification.map((notif) => (
+                <MenuItem
+                  key={notif._id}
+                  onClick={() => {
+                    setSelectedChat(notif.chat);
+                    setNotification(notification.filter((n) => n !== notif));
+                  }}
+                >
+                  {console.log(notification)}
+                  {notif.chat.isGroupChat
+                    ? `New Message in ${notif.chat.chatName}`
+                    : `New Message: ${notif.message},  from ${getSender(user, notif.chat.users)}`}
+                </MenuItem>
+              ))}
             </MenuList>
           </Menu>
           <Menu>
