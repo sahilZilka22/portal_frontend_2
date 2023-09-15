@@ -29,6 +29,7 @@ import { useToast } from "@chakra-ui/toast";
 import ProfileModal from './ProfileModal';
 import UserListItem from '../UserComponents/UserListItem ';
 import { getSender } from '../../config/chatLogics';
+import NotificationBadge from './NotificationBadge';
 
 
 const SideDrawer = () => {
@@ -145,8 +146,9 @@ const SideDrawer = () => {
         <div>
           {/*This menu is for notificationj */}
           <Menu>
-            <MenuButton p={1}>
+            <MenuButton position="relative" p={1}>
               <BellIcon fontSize="2xl" m={1} />
+              <NotificationBadge notificationCount={notification.length}/>
             </MenuButton>
             <MenuList pl={2}>
               {!notification.length && "No New Messages"}
@@ -158,7 +160,6 @@ const SideDrawer = () => {
                     setNotification(notification.filter((n) => n !== notif));
                   }}
                 >
-                  {console.log(notification)}
                   {notif.chat.isGroupChat
                     ? `New Message in ${notif.chat.chatName}`
                     : `New Message: ${notif.message},  from ${getSender(user, notif.chat.users)}`}

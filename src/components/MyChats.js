@@ -1,6 +1,6 @@
 import React from 'react'
 import { AddIcon } from "@chakra-ui/icons";
-import { Box, Stack, Text } from "@chakra-ui/layout";
+import { Box, Stack, Text, Badge } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -10,10 +10,11 @@ import expressAsyncHandler from 'express-async-handler';
 import ChatLoading from "../components/Miscellaneous/ChatlLoading";
 import GroupChatModal from "../components/Miscellaneous/GroupChatModal";
 import { getSender } from '../config/chatLogics';
+import NotificationBadge from './Miscellaneous/NotificationBadge';
 
 const MyChats = ({fetchAgain}) => {
   const [loggedUser, setLoggedUser] = useState();
-  const {selectedChat,setSelectedChat,user,chats,setChats} = ChatState();
+  const {selectedChat,setSelectedChat,user,chats,setChats, notification,} = ChatState();
   const toast =  useToast();
 
   const fetchChats = expressAsyncHandler(async() => {
@@ -61,7 +62,7 @@ const MyChats = ({fetchAgain}) => {
         fontFamily="Work sans"
         display="flex"
         w="100%"
-        justifyContent="space-between"
+        justifymess="space-between"
         alignItems="center"
       >
         My Chats
@@ -105,7 +106,11 @@ const MyChats = ({fetchAgain}) => {
                 </Text>
                 {chat.latestMessage && (
                   <Text fontSize="xs">
+                     {/* <b>{chat.latestMessage.sender.name} : </b>
+                    {chat.latestMessage.message.length > 50? chat.latestMessage.message.substring(0, 51) + "..."
+                      : chat.latestMessage.message} */}
                   </Text>
+                  
                 )}
               </Box>
             ))}

@@ -1,6 +1,7 @@
 import { Avatar } from "@chakra-ui/avatar";
 import { Tooltip } from "@chakra-ui/tooltip";
 import ScrollableFeed from "react-scrollable-feed";
+import FileListComponent from "./UserComponents/FileListComponent";
 import {
   isLastMessage,
   isSameSender,
@@ -13,7 +14,7 @@ const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();
 
   return (
-    <ScrollableFeed>
+    <ScrollableFeed >
       {messages &&
         messages.map((m, i) => (
           <div style={{ display: "flex" }} key={m._id}>
@@ -26,14 +27,14 @@ const ScrollableChat = ({ messages }) => {
                   size="sm"
                   cursor="pointer"
                   name={m.sender.name}
-                  src={m.sender.pic}
+                  src={m.sender.photo}
                 />
               </Tooltip>
             )}
             <span
               style={{
                 backgroundColor: `${
-                  m.sender._id === user._id ? "#BEE3F8" : "#B9F5D0"
+                  m.sender._id === user._id ? "#BEE3F8" : "#e84d6c"
                 }`,
                 marginLeft: isSameSenderMargin(messages, m, i, user._id),
                 marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
@@ -43,8 +44,11 @@ const ScrollableChat = ({ messages }) => {
               }}
             >
               {m.message}
+              <FileListComponent files={m.content}/>
+             
             </span>
           </div>
+  
         ))}
     </ScrollableFeed>
   );
