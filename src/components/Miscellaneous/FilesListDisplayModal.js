@@ -20,9 +20,10 @@ import {AttachmentIcon, DeleteIcon} from "@chakra-ui/icons"
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { ChatState } from "../../Context/ChatProvider";
+import io from "socket.io-client";
 
-
-
+const ENDPOINT = "http://localhost:5001"  ;
+var socket;
 
 const FilesListDisplayModal = ({children}) => {
      const [files,setfiles] =  useState([]);
@@ -30,6 +31,7 @@ const FilesListDisplayModal = ({children}) => {
      const { isOpen, onOpen, onClose } = useDisclosure();
      const toast = useToast();
      const {selectedChat,user} = ChatState();
+     socket = io(ENDPOINT);
 
      
      /*  
@@ -97,6 +99,8 @@ const FilesListDisplayModal = ({children}) => {
         })
         const {data} = await axios.post("/api/v1/newMessage", formdata, config);
         // setNewMessage to data
+        socket.emit("new message",data);
+        
         toast({
             title : "Files Sent",
             status : "success",
@@ -104,7 +108,7 @@ const FilesListDisplayModal = ({children}) => {
             isClosable : true,
             position : "bottom"
         })
-        console.log(data);
+
         setfiles([]);
     } catch (error) {
        console.log(error);

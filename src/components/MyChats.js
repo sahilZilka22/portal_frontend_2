@@ -62,7 +62,7 @@ const MyChats = ({fetchAgain}) => {
         fontFamily="Work sans"
         display="flex"
         w="100%"
-        justifymess="space-between"
+        justifyContent="space-between"
         alignItems="center"
       >
         My Chats
@@ -109,8 +109,7 @@ const MyChats = ({fetchAgain}) => {
                      {/* <b>{chat.latestMessage.sender.name} : </b>
                     {chat.latestMessage.message.length > 50? chat.latestMessage.message.substring(0, 51) + "..."
                       : chat.latestMessage.message} */}
-                  </Text>
-                  
+                  </Text>   
                 )}
               </Box>
             ))}

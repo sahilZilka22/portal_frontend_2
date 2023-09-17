@@ -1,22 +1,24 @@
 import React, { useEffect } from 'react'
 import { ChatState } from '../../Context/ChatProvider'
-import { Box, Flex, FormControl, 
-  FormLabel, 
+import { Box, FormControl, 
   IconButton, Input, InputGroup,
-  InputRightAddon, InputRightElement,
+  InputRightElement,
   Spinner, Text,useColorModeValue,
-  useToast, Modal,
+  useToast,
+  useDisclosure,
+  Button,
+  Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Button,
-  useDisclosure,List,
+  List,
   ListItem,
-  ListIcon, } from '@chakra-ui/react'
-import { ArrowBackIcon,AttachmentIcon,ArrowForwardIcon, CloseIcon } from '@chakra-ui/icons'
+  ListIcon,
+   } from '@chakra-ui/react'
+import { ArrowBackIcon,DeleteIcon,ArrowForwardIcon,AddIcon,AttachmentIcon} from '@chakra-ui/icons'
 import UpdateGroupChatModal from './UpdateGroupChatModal'
 import { getSender, getSenderFull } from '../../config/chatLogics'
 import ProfileModal from './ProfileModal'
@@ -25,9 +27,6 @@ import axios from 'axios'
 import ScrollableChat from '../ScrollableChat'
 import "./styles.css";
 import io from "socket.io-client";
-import { warning } from 'framer-motion'
-import { set } from 'mongoose'
-import FilesListDisplayModal from './FilesListDisplayModal'
 
 const ENDPOINT = "http://localhost:5001"  ;
 var socket, selectedChatCompare;
@@ -35,13 +34,15 @@ var socket, selectedChatCompare;
 const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
 
     const [messages, setMessages] = useState([]);
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const [content, setContent] = useState([]);
     const [loading, setLoading] = useState(false);
     const [newMessage, setNewMessage] = useState("");
     const [socketConnected, setSocketConnected] = useState(false);
     const [typing, setTyping] = useState(false);
     const [istyping, setIsTyping] = useState(false);
+    const [files,setfiles] =  useState([]);
+    const [sendingFiles, setsendingFiles] = useState(false)
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();   
 
     const {user,selectedChat,setSelectedChat,notification,setNotification} = ChatState();
@@ -71,7 +72,6 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
         `/api/v1/newMessage/getallMessages/${selectedChat._id}`,
         config
       );
-      console.log(data);
       setMessages(data);
       setLoading(false);
       setIsTyping(false)
@@ -89,76 +89,70 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
     };
 
 
-  const sendMessage = async (event) => {
-    if (event.key === "Enter" && newMessage) {
-      socket.emit("stop typing", selectedChat._id);
-      try {
-        const config = {
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
-        setNewMessage("");
-        const { data } = await axios.post(
-          "/api/v1/message/new",
-          {
-            content: newMessage,
-            chatID: selectedChat,
-          },
-          config
-        );
-        socket.emit("new message", data);
-        setMessages([...messages, data]);
-      } catch (error) {
-        toast({
-          title: "Error Occured!",
-          description: "Failed to send the Message",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom",
-        });
-      }
+ 
+   const handleFileSelection = (eventFiles) =>{
+        if(eventFiles.target.files.length === undefined){
+            toast ({
+                title : "Please select files to send",
+                status : "warning",
+                duration : 5000,
+                isClosable : true,
+                position : "bottom"
+            });
+        }
+        
+        const filesArray = Array.from(eventFiles.target.files);
+        setfiles(filesArray);
+        
     }
-  };
+    
+  const removeFile = (index) =>{
+       const allfiles = [...content]
+       allfiles.splice(index,1);
+       setfiles(allfiles)
+    }
 
  
  
   // chatId,message = newMessage, content = Array of files
   const sendNewMessage = async (event) => {
-    if (event.key === "Enter" && newMessage || content) {
-      socket.emit("stop typing", selectedChat._id);
-      try {
-        const config = {
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
-        setNewMessage("");
-        const { data } = await axios.post(
-          "/api/v1/message/new",
-          {
-            content: newMessage,
-            chatID: selectedChat,
-          },
-          config
-        );
-        socket.emit("new message", data);
-        setMessages([...messages, data]);
-      } catch (error) {
-        toast({
-          title: "Error Occured!",
-          description: "Failed to send the Message",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom",
-        });
+    setsendingFiles(true)
+    const formData = new FormData();
+  if ((event.key === "Enter" || event.type === "click") && (newMessage || files.length > 0)){
+    socket.emit("stop typing", selectedChat._id);
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      files.forEach((file) => {
+        formData.append("content", file);
+      });
+      formData.append("chatId", selectedChat._id);
+
+      if (newMessage) {
+        formData.append('message', newMessage);
       }
+      const { data } = await axios.post("/api/v1/newMessage", formData, config);
+      socket.emit("new message", data);
+      setMessages([...messages, data]);
+      setNewMessage(""); // Clear the message input field
+      setfiles([]); // Clear the content (files)
+      setsendingFiles(false)
+    } catch (error) {
+      toast({
+        title: "Error Occurred!",
+        description: "Failed to send the Message",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
     }
-  };
+  }
+};
 
 
   const typingHandler = (e) => {
@@ -204,6 +198,7 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
            }
       })
     });
+
     const paleGreenColor = useColorModeValue("green.500", "green.200");
 
 
@@ -271,20 +266,13 @@ return (
             )}
 
             <FormControl
-              onKeyDown={sendMessage}
+              onKeyDown={sendNewMessage}
               id="first-name"
               isRequired
               mt={3}
             >
               {istyping ? (
                 <div>
-                  {/* <Lottie
-                    options={defaultOptions}
-                    // height={50}
-                    width={70}
-                    style={{ marginBottom: 15, marginLeft: 0 }}
-                  /> */}
-                  {/* {getSender(user, selectedChat.users) + `is typing...`} */}
                   {"typing..."}
                 </div>
               ) : (
@@ -299,29 +287,22 @@ return (
                   onChange={typingHandler}
                 />
                 <InputRightElement>
-                  <FilesListDisplayModal>
-                      <IconButton
-                        as="span"
-                        aria-label="Attach File"
-                        icon={<AttachmentIcon />}
-                        size="md"
-                        marginRight="100px"
-                      ></IconButton>
-                  </FilesListDisplayModal>
-                    
-                    {/* <input
-                      id="file-input"
-                      type="file"
-                      style={{ display: "none" }} 
-                      multiple
-                    /> */}
-
+                  <Button 
+                  marginRight="150px" 
+                  onClick={onOpen} 
+                  colorScheme='blue' 
+                  size="md"
+                  px={2}
+                  minWidth="auto" // Adjust the width as neede
+                  >
+                    Send Files
+                  </Button>
                 </InputRightElement>
                 <InputRightElement width="auto">
                   <IconButton 
                    aria-label="Send Message"
                    icon={<ArrowForwardIcon/>}
-                   onClick={sendMessage}
+                   onClick={sendNewMessage}
                    bgColor={paleGreenColor}
                    _hover={{bgColor : paleGreenColor}}
                    size="md"
@@ -330,6 +311,72 @@ return (
                 </InputRightElement>
                 {/* conditional rendering is when setcontent.length is true so do what is after && */}
              </InputGroup>
+               {/* Modal */}
+                <Modal isOpen={isOpen} onClose={onClose}>
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>Selected Files</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                      <label htmlFor="file-input">
+                        <IconButton
+                          icon={<AddIcon />}
+                          as="span"
+                          aria-label="Attach Files"
+                          size="lg"
+                          marginBottom="10px"
+                        />
+                        <input
+                          type="file"
+                          id="file-input"
+                          style={{ display: 'none' }}
+                          multiple
+                          onChange={handleFileSelection}
+                        />
+                      </label>
+                      {files.length > 0 ? (
+                        <List spacing={3}>
+                          {files.map((file, index) => (
+                            <ListItem key={index}>
+                              <Box
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
+                                bg="palegreen"
+                                p={2}
+                                borderRadius="md"
+                              >
+                                <ListIcon as={AttachmentIcon} color="green.500" />
+                                {file.name}
+                                <IconButton
+                                  icon={<DeleteIcon />}
+                                  onClick={() => removeFile(index)}
+                                  color="white"
+                                  bgColor="red.400"
+                                />
+                              </Box>
+                            </ListItem>
+                          ))}
+                        </List>
+                      ) : (
+                        <p>No files selected.</p>
+                      )}
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button
+                        colorScheme="blue"
+                        mr={3}
+                        onClick={sendNewMessage}
+                        isDisabled={files.length === 0}
+                      >
+                        {sendingFiles ? "Sending files" : "Send Files"}
+                      </Button>
+                      <Button variant="ghost" onClick={onClose}>
+                        Cancel
+                      </Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Modal>
             </FormControl>
           </Box>
         </>
