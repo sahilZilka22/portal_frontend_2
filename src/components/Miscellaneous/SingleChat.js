@@ -103,40 +103,6 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
     }
   };
 
-  // chatId,message = newMessage, content = Array of files
-  const sendNewMessage = async (event) => {
-    if (event.key === "Enter" && newMessage || content) {
-      socket.emit("stop typing", selectedChat._id);
-      try {
-        const config = {
-          headers: {
-            "Content-type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
-        setNewMessage("");
-        const { data } = await axios.post(
-          "/api/v1/message/new",
-          {
-            content: newMessage,
-            chatID: selectedChat,
-          },
-          config
-        );
-        socket.emit("new message", data);
-        setMessages([...messages, data]);
-      } catch (error) {
-        toast({
-          title: "Error Occured!",
-          description: "Failed to send the Message",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom",
-        });
-      }
-    }
-  };
 
 
   const typingHandler = (e) => {

@@ -15,11 +15,9 @@ import {
 import {Avatar,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
   useDisclosure,Input,Spinner
 } from "@chakra-ui/react"
 import { Tooltip } from "@chakra-ui/tooltip";

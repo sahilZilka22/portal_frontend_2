@@ -9,7 +9,7 @@ import {
   ModalCloseButton,
   IconButton,
   useDisclosure,
-  Image,Text,Button
+  Image,Text,
 } from '@chakra-ui/react'
 import { ViewIcon } from '@chakra-ui/icons'
 

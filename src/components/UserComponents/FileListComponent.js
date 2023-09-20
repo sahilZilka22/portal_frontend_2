@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  VStack,
-  Image,
-  Text,
   IconButton,
   Tooltip,
   Modal,
@@ -12,8 +9,6 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Icon,
-  Flex,
 } from "@chakra-ui/react";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";

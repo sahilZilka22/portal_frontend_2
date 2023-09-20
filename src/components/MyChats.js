@@ -6,18 +6,17 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
-import expressAsyncHandler from 'express-async-handler';
 import ChatLoading from "../components/Miscellaneous/ChatlLoading";
 import GroupChatModal from "../components/Miscellaneous/GroupChatModal";
 import { getSender } from '../config/chatLogics';
-import NotificationBadge from './Miscellaneous/NotificationBadge';
+
 
 const MyChats = ({fetchAgain}) => {
   const [loggedUser, setLoggedUser] = useState();
   const {selectedChat,setSelectedChat,user,chats,setChats, notification,} = ChatState();
   const toast =  useToast();
 
-  const fetchChats = expressAsyncHandler(async() => {
+  const fetchChats = async() => {
     try {
       const config = {
         headers : {
@@ -37,7 +36,7 @@ const MyChats = ({fetchAgain}) => {
         position: "bottom-left",
       });
     }
-  })
+  }
 
   useEffect(()=>{
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
