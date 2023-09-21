@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   IconButton,
@@ -37,7 +37,6 @@ const FileListComponent = ({ files }) => {
               <Tooltip label="Click to view" hasArrow>
               <img
                 src={file.download_url}
-                alt="Image"
                 style={{
                   maxWidth: '250px',
                   maxHeight: '200px',
@@ -108,7 +107,6 @@ const FileListComponent = ({ files }) => {
                   <Zoom>
                     <img
                       src={selectedFile.download_url}
-                      alt="Image"
                       style={{
                         maxWidth: '100%',
                         maxHeight: '100%',

@@ -13,7 +13,7 @@ import { getSender } from '../config/chatLogics';
 
 const MyChats = ({fetchAgain}) => {
   const [loggedUser, setLoggedUser] = useState();
-  const {selectedChat,setSelectedChat,user,chats,setChats, notification,} = ChatState();
+  const {selectedChat,setSelectedChat,user,chats,setChats,} = ChatState();
   const toast =  useToast();
 
   const fetchChats = async() => {
