@@ -44,6 +44,9 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
     const [sendingFiles, setsendingFiles] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();   
+    const api = axios.create({
+      baseURL: 'https://backend-p1wy.onrender.com/api/v1', // Replace with your backend URL
+    });
 
     const {user,selectedChat,setSelectedChat,notification,setNotification} = ChatState();
 
@@ -68,8 +71,8 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
 
       setLoading(true);
 
-      const { data } = await axios.get(
-        `/api/v1/newMessage/getallMessages/${selectedChat._id}`,
+      const { data } = await api.get(
+        `/newMessage/getallMessages/${selectedChat._id}`,
         config
       );
       setMessages(data);
@@ -135,7 +138,7 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
       if (newMessage) {
         formData.append('message', newMessage);
       }
-      const { data } = await axios.post("/api/v1/newMessage", formData, config);
+      const { data } = await api.post("/newMessage", formData, config);
       socket.emit("new message", data);
       setMessages([...messages, data]);
       setNewMessage(""); // Clear the message input field

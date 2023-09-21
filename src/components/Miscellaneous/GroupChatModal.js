@@ -30,6 +30,9 @@ const GroupChatModal = ({children}) => {
         const [loading, setLoading] = useState(false);
         const toast = useToast();
         
+        const api = axios.create({
+            baseURL: 'https://backend-p1wy.onrender.com/api/v1', // Replace with your backend URL
+          });
         const handleGroup = (userToAdd) => {
             if (selectedUsers.includes(userToAdd)) {
                  toast({
@@ -57,7 +60,7 @@ const GroupChatModal = ({children}) => {
                              Authorization: `Bearer ${user.token}`,
                         },
                     };
-                    const {data} = await axios.get(`/api/v1/user/searchUsers?search=${search}`, config);
+                    const {data} = await api.get(`/user/searchUsers?search=${search}`, config);
                     console.log(data);
                     setLoading(false);
                     setSearchResult(data);
@@ -93,7 +96,7 @@ const GroupChatModal = ({children}) => {
                         Authorization: `Bearer ${user.token}`,
                         },
                     };
-                const {data} = await axios.post(`api/v1/chat/group`,{
+                const {data} = await api.post(`/chat/group`,{
                     name : groupChatName,
                     users :JSON.stringify(selectedUsers.map((u)=> u._id)),
                 },config);

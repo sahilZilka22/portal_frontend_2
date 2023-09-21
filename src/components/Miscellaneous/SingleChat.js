@@ -27,6 +27,10 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
 
     const {user,selectedChat,setSelectedChat,notification,setNotification} = ChatState();
 
+    const api = axios.create({
+      baseURL: 'https://backend-p1wy.onrender.com/api/v1', // Replace with your backend URL
+    });
+
     useEffect(()=>{
       socket = io(ENDPOINT);
       socket.emit("setup",user);
@@ -48,8 +52,8 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
 
       setLoading(true);
 
-      const { data } = await axios.get(
-        `/api/v1/newMessage/getallMessages/${selectedChat._id}`,
+      const { data } = await api.get(
+        `/newMessage/getallMessages/${selectedChat._id}`,
         config
       );
       setMessages(data);
@@ -80,8 +84,8 @@ const SingleChat = ({fetchAgain,setFetchAgain}) => {
           },
         };
         setNewMessage("");
-        const { data } = await axios.post(
-          "/api/v1/message/new",
+        const { data } = await api.post(
+          "/message/new",
           {
             content: newMessage,
             chatID: selectedChat,

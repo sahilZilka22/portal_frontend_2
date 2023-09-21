@@ -54,6 +54,10 @@ const SideDrawer = () => {
       history.push("/");
     };
 
+    const api = axios.create({
+      baseURL: 'https://backend-p1wy.onrender.com/api/v1', // Replace with your backend URL
+    });
+
   const handleSearch = async () => {
     if (!search) {
       toast({
@@ -76,7 +80,7 @@ const SideDrawer = () => {
       };
 
     
-      const { data } = await axios.get(`/api/v1/user/searchUsers?search=${search}`, config);
+      const { data } = await api.get(`/user/searchUsers?search=${search}`, config);
      
       setLoading(false);
       setSearchResult(data);
@@ -103,7 +107,7 @@ const SideDrawer = () => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(`/api/v1/chat/`, { userId }, config);
+      const { data } = await api.post(`/chat/`, { userId }, config);
 
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);

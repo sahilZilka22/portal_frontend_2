@@ -32,6 +32,9 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
      const [loading, setLoading] = useState(false);
      const [renameLoading, setRenameLoading] = useState(false);
      const toast = useToast();
+     const api = axios.create({
+      baseURL: 'https://backend-p1wy.onrender.com/api/v1', // Replace with your backend URL
+    });
 
      const handleAddUser =async(user1) => {
         if(selectedChat.users.find((u)=> u._id === user1._id)){
@@ -61,7 +64,7 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                      Authorization: `Bearer ${user.token}`,
                 },
             };
-            const {data} = await axios.put(`/api/v1/chat/groupadd`,
+            const {data} = await api.put(`/chat/groupadd`,
                 {
                     chatId : selectedChat._id,
                     userId : user1._id
@@ -98,7 +101,7 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                      Authorization: `Bearer ${user.token}`,
                 },
             };
-            const {data} = await axios.get(`/api/v1/user/searchUsers?search=${search}`, config);
+            const {data} = await api.get(`/user/searchUsers?search=${search}`, config);
 
             setLoading(false);
             setSearchResult(data);
@@ -132,7 +135,7 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                     Authorization :  `Bearer ${user.token}`,
                 }
             };
-            const { data } = await axios.put(`/api/v1/chat/groupremove`,
+            const { data } = await api.put(`/chat/groupremove`,
                 {
                 chatId: selectedChat._id,
                 userId: user1._id,
@@ -168,8 +171,8 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                          Authorization: `Bearer ${user.token}`,
                 }
             }
-            const {data} = await axios.put(
-                `/api/v1/chat/rename`,
+            const {data} = await api.put(
+                `/chat/rename`,
                 {chatId:selectedChat._id,chatName : groupChatName},
                 config
             );
