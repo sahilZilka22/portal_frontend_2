@@ -53,7 +53,7 @@ const Signupbox = () => {
                      "Content-type": "application/json",
                 }
             };
-            const {data } = await axios.post("http://localhost:5001/api/v1/user/",{
+            const {data } = await axios.post("https://backend-p1wy.onrender.com/api/v1/user/",{
                 name,email,password,photo
             },config);
             console.log(data);

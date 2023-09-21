@@ -41,7 +41,7 @@ const Loginbox = () => {
                      "Content-type": "application/json",
                 }
             };
-            const {data} = await axios.post("http://localhost:5001/api/v1/user/login",{
+            const {data} = await axios.post("https://backend-p1wy.onrender.com/api/v1/user/login",{
                 email,password
             },config);
             toast({
