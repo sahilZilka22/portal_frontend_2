@@ -15,8 +15,11 @@ const MyChats = ({fetchAgain}) => {
   const [loggedUser, setLoggedUser] = useState();
   const {selectedChat,setSelectedChat,user,chats,setChats,} = ChatState();
   const toast =  useToast();
+  const backend = 'https://backend-p1wy.onrender.com/api/v1'
+  const localbackend = "http://localhost:5001/api/v1"
+
   const api = axios.create({
-      baseURL: 'https://backend-p1wy.onrender.com/api/v1', // Replace with your backend URL
+      baseURL: backend, // Replace with your backend URL
     });
 
   const fetchChats = async() => {

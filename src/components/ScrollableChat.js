@@ -90,43 +90,45 @@ const ScrollableChat = ({ messages }) => {
             </Tooltip>
           )}
           <div
-            style={{
-              backgroundColor: `${
-                m.sender._id === user._id ? "#BEE3F8" : "#e84d6c"
-              }`,
-              borderRadius:"15px",
-              marginLeft: isSameSenderMargin(messages, m, i, user._id),
-              marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
-            }}
-          >
-            {m.message && (
-              <div 
               style={{
-              padding: "5px 20px 5px 5px",
-              marginTop:"6px",
-              marginLeft:"8px",
+                backgroundColor: m.sender._id === user._id ? "#BEE3F8" : "#e84d6c",
+                borderRadius: "15px",
+                marginLeft: isSameSenderMargin(messages, m, i, user._id),
+                marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
               }}
-              >
-              <p style={{
-                fontFamily:"sans-serif",
-                fontWeight:"550",
-                fontSize:"14px",
-                fontStyle:"normal"
-              }}>{m.message}</p>
-              <p style={{
-                marginTop:"8px"
-              }}> {m.createdAt && (
-                    <div style={{ fontSize:"12px",color:"black",}}>
-                            {new Date(m.createdAt).toLocaleString("en-IN", {
-                              timeZone: "Asia/Kolkata",
-                              dateStyle:"short",
-                              timeStyle : "short"
-                            })}
+            >
+              {m.message && (
+                <div>
+                  <p
+                    style={{
+                      fontFamily: "sans-serif",
+                      fontWeight: 550,
+                      fontSize: "14px",
+                      fontStyle: "normal",
+                      marginBottom: "8px", // Add margin for spacing
+                      padding: "6px 8px", // Adjust padding for better alignment
+                    }}
+                  >
+                    {m.message}
+                  </p>
+                  {m.createdAt && (
+                    <div
+                      style={{
+                        fontSize: "12px",
+                        color: "black",
+                        padding: "6px 8px", // Adjust padding for better alignment
+                      }}
+                    >
+                      {new Date(m.createdAt).toLocaleString("en-IN", {
+                        timeZone: "Asia/Kolkata",
+                        dateStyle: "short",
+                        timeStyle: "short",
+                      })}
                     </div>
-                )}</p>
-              </div>
-            )}
-          </div>
+                  )}
+                </div>
+              )}
+            </div>
           <div
             style={{
               display: "flex",

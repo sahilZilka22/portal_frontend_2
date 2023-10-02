@@ -32,9 +32,12 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
      const [loading, setLoading] = useState(false);
      const [renameLoading, setRenameLoading] = useState(false);
      const toast = useToast();
+     const backend = 'https://backend-p1wy.onrender.com/api/v1'
+     const localbackend = "http://localhost:5001/api/v1"
+
      const api = axios.create({
-      baseURL: 'https://backend-p1wy.onrender.com/api/v1', // Replace with your backend URL
-    });
+         baseURL: backend, // Replace with your backend URL
+     });
 
      const handleAddUser =async(user1) => {
         if(selectedChat.users.find((u)=> u._id === user1._id)){

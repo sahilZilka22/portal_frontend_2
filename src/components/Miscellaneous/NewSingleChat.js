@@ -18,7 +18,7 @@ import { Box, FormControl,
   ListItem,
   ListIcon,
    } from '@chakra-ui/react'
-import { ArrowBackIcon,DeleteIcon,ArrowForwardIcon,AddIcon,AttachmentIcon} from '@chakra-ui/icons'
+import { ArrowBackIcon,DeleteIcon,ArrowForwardIcon,AddIcon,AttachmentIcon, DownloadIcon} from '@chakra-ui/icons'
 import UpdateGroupChatModal from './UpdateGroupChatModal'
 import { getSender, getSenderFull } from '../../config/chatLogics'
 import ProfileModal from './ProfileModal'
@@ -27,8 +27,10 @@ import axios from 'axios'
 import ScrollableChat from '../ScrollableChat'
 import "./styles.css";
 import io from "socket.io-client";
+import AudioRecorder from '../Miscellaneous/AudioRecorder'
 
-const ENDPOINT = "https://backend-p1wy.onrender.com"  ;
+
+const ENDPOINT = "http://localhost:5001"  ; // backend endpoint
 var socket, selectedChatCompare;
 
 const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
@@ -44,8 +46,10 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
     const [sendingFiles, setsendingFiles] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();   
+    const backend = 'https://backend-p1wy.onrender.com/api/v1'
+    const localbackend = "http://localhost:5001/api/v1"
     const api = axios.create({
-      baseURL: 'https://backend-p1wy.onrender.com/api/v1', // Replace with your backend URL
+      baseURL: backend, // Replace with your backend URL
     });
 
     const {user,selectedChat,setSelectedChat,notification,setNotification} = ChatState();
@@ -105,8 +109,7 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
         }
         
         const filesArray = Array.from(eventFiles.target.files);
-        setfiles(filesArray);
-        
+        setfiles(filesArray);   
     }
     
   const removeFile = (index) =>{
@@ -115,13 +118,24 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
        setfiles(allfiles)
     }
 
+    // make a function which will recieve the file from the audio recorder
+    // and set it to setfiles(audioFile)
+    const handleAudioRecorded = (recordedAudioFile) => {
+       const event = {
+        key: "Enter", // Set the desired key or event properties
+        type: "click", // Set the desired event type
+      };
+      console.log("Call the new Message function");
+      sendNewMessage(event,recordedAudioFile);
+    }
  
  
   // chatId,message = newMessage, content = Array of files
-  const sendNewMessage = async (event) => {
+  const sendNewMessage = async (event,recordedAudioFile) => {
     setsendingFiles(true)
     const formData = new FormData();
-  if ((event.key === "Enter" || event.type === "click") && (newMessage || files.length > 0)){
+  if ((event.key === "Enter" || event.type === "click") && 
+      (newMessage || files.length > 0 || recordedAudioFile)){;
     socket.emit("stop typing", selectedChat._id);
     try {
       const config = {
@@ -129,10 +143,15 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-
-      files.forEach((file) => {
-        formData.append("content", file);
-      });
+      if(recordedAudioFile){
+        formData.append("content",recordedAudioFile)
+        console.log("File sent from here");
+      }else{
+          files.forEach((file) => {
+            formData.append("content", file);
+          });
+      }
+      
       formData.append("chatId", selectedChat._id);
 
       if (newMessage) {
@@ -145,20 +164,32 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
       setfiles([]); // Clear the content (files)
       setsendingFiles(false)
     } catch (error) {
-      toast({
-        title: "Error Occurred!",
-        description: "Failed to send the Message",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
+      if (error.response) {
+        toast({
+          title: "Error Occurred!",
+          description: "Failed to send the Message",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }else{
+         toast({
+           title: "Error Occured from the servers!",
+           description: error.response.data.message,
+           status: "error",
+           duration: 5000,
+           isClosable: true,
+           position: "bottom",
+         });
+      }
     }
   }
-};
+  };
 
 
   const typingHandler = (e) => {
+    
     setNewMessage(e.target.value)
     if(!socketConnected) return ;
     if(!typing){
@@ -180,8 +211,6 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
     },timerLength);
 
   }
-
-  
 
    useEffect(()=>{
         fetchMessages();
@@ -228,9 +257,7 @@ return (
               (!selectedChat.isGroupChat ? (
                 <>
                   {getSender(user, selectedChat.users)}
-                  <ProfileModal
-                    user={getSenderFull(user, selectedChat.users)}
-                  />
+                  <ProfileModal user={getSenderFull(user, selectedChat.users)}/>
                 </>
               ) : (
                 <>
@@ -267,7 +294,6 @@ return (
                 <ScrollableChat messages={messages} />
               </div>
             )}
-
             <FormControl
               onKeyDown={sendNewMessage}
               id="first-name"
@@ -311,6 +337,9 @@ return (
                    size="md"
                    marginRight="2px" 
                   />
+                </InputRightElement>
+                <InputRightElement marginRight={150} >
+                  {messages && <> <AudioRecorder onAudioRecorded={handleAudioRecorded}/> </>}
                 </InputRightElement>
                 {/* conditional rendering is when setcontent.length is true so do what is after && */}
              </InputGroup>

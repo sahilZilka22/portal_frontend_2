@@ -53,9 +53,10 @@ const SideDrawer = () => {
       localStorage.removeItem("userInfo");
       history.push("/");
     };
-
+    const backend = 'https://backend-p1wy.onrender.com/api/v1'
+    const localbackend = "http://localhost:5001/api/v1"
     const api = axios.create({
-      baseURL: 'https://backend-p1wy.onrender.com/api/v1', // Replace with your backend URL
+      baseURL: backend, // Replace with your backend URL
     });
 
   const handleSearch = async () => {
@@ -69,30 +70,39 @@ const SideDrawer = () => {
       });
       return;
     }
-
     try {
       setLoading(true);
-
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       };
-
-    
       const { data } = await api.get(`/user/searchUsers?search=${search}`, config);
-     
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
-      toast({
-        title: "Error Occured!",
-        description: "Failed to Load the Search Results",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-left",
-      });
+      if (error.response) {
+        toast({
+          title: "Error Occured!",
+          description: "Failed to Load the Search Results",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-left",
+        });
+      } else {
+        toast({
+          title: "Error Occured from the servers!",
+          description: "Failed to Load the Search Results",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-left",
+        });
+      }
+      console.log(error);
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -114,14 +124,25 @@ const SideDrawer = () => {
       setLoadingChat(false);
       onClose();
     } catch (error) {
-      toast({
-        title: "Error fetching the chat",
-        description: error.message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-left",
-      });
+     if (error.response) {
+       toast({
+         title: "Error fetching the chat",
+         description: error.message,
+         status: "error",
+         duration: 5000,
+         isClosable: true,
+         position: "bottom-left",
+       });
+     } else {
+        toast({
+         title: "Error Occured from the servers!",
+         description: error.response.data.message,
+         status: "error",
+         duration: 5000,
+         isClosable: true,
+         position: "bottom",
+        });
+     }
     }
   };
 
@@ -137,7 +158,7 @@ const SideDrawer = () => {
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
           <Button variant="ghost"onClick={onOpen} >
             <i className="fas fa-search"></i>
-            <Text d={{ base: "none", md: "flex" }} px={4}>
+            <Text display={{ base: "none", md: "flex" }} px={4}>
               Search User
             </Text>
           </Button>

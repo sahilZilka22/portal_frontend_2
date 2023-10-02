@@ -18,7 +18,8 @@ const Signupbox = () => {
     const [photo, setphoto] = useState();
     const [picloading,setPicloading] = useState(false);
    
-    
+    const backend = 'https://backend-p1wy.onrender.com/api/v1'
+    const localbackend = "http://localhost:5001/api/v1"
 
     //making a function handle click which will invert the value of show usestate
     const handleClick = ()=> setshow(!show)
@@ -53,10 +54,10 @@ const Signupbox = () => {
                      "Content-type": "application/json",
                 }
             };
-            const {data } = await axios.post("https://backend-p1wy.onrender.com/api/v1/user/",{
+            const {data } = await axios.post(`${backend}/user/`,{
                 name,email,password,photo
             },config);
-            console.log(data);
+      
             toast({
                 title: "Registration Successful",
                 status: "success",
@@ -68,14 +69,25 @@ const Signupbox = () => {
             setPicloading(false);
             history.push("/chats");
         } catch (error) {
-             toast({
+             if(error.response){
+                toast({
                     title: "Error Occured!",
                     description: error.response.data.message,
                     status: "error",
                     duration: 5000,
                     isClosable: true,
                     position: "bottom",
-            });
+                });
+             }else{ // network errors
+                 toast({
+                    title: "Error Occured from the servers!",
+                    description: error.response.data.message,
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                    position: "bottom",
+                });
+             }
             setPicloading(false);
           };
             
