@@ -29,9 +29,16 @@ import "./styles.css";
 import io from "socket.io-client";
 import AudioRecorder from '../Miscellaneous/AudioRecorder'
 
+const backend = 'https://backend-p1wy.onrender.com/api/v1'
+const localbackend = "http://localhost:5001/api/v1"
+const api = axios.create({
+    baseURL: backend, // Replace with your backend URL
+});
 
-const ENDPOINT = "http://localhost:5001"  ; // backend endpoint
+
+const ENDPOINT = backend  ; // backend endpoint
 var socket, selectedChatCompare;
+
 
 const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
 
@@ -46,12 +53,6 @@ const NewSingleChat = ({fetchAgain,setFetchAgain}) => {
     const [sendingFiles, setsendingFiles] = useState(false)
     const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();   
-    const backend = 'https://backend-p1wy.onrender.com/api/v1'
-    const localbackend = "http://localhost:5001/api/v1"
-    const api = axios.create({
-      baseURL: backend, // Replace with your backend URL
-    });
-
     const {user,selectedChat,setSelectedChat,notification,setNotification} = ChatState();
 
     useEffect(()=>{
