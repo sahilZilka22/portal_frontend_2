@@ -36,7 +36,7 @@ const api = axios.create({
 });
 
 
-const ENDPOINT = backend  ; // backend endpoint
+const ENDPOINT = "https://backend-p1wy.onrender.com/"
 var socket, selectedChatCompare;
 
 
