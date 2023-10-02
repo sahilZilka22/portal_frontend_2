@@ -117,7 +117,6 @@ const Signupbox = () => {
                 .then((res) => res.json())
                     .then((data) => {
                         setphoto(data.url.toString());
-                        console.log(data.url.toString());
                         setPicloading(false);
                     })
                 .catch((err) => {
