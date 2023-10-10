@@ -33,7 +33,7 @@ const NewSignUpBox = () => {
   const [loading, setLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [picloading, setPicloading] = useState(false);
-  const backend = "https://backend-p1wy.onrender.com/api/v1";
+  const backend = "https://dooper-backend.onrender.com/api/v1";
   const localbackend = "http://localhost:5001/api/v1";
 
   const submitHandler = async (name, ph, role) => {
@@ -57,7 +57,7 @@ const NewSignUpBox = () => {
         },
       };
       const { data } = await axios.post(
-        `${localbackend}/newuser/`,
+        `${backend}/newuser/`,
         {
           name,
           phoneNumber: ph,

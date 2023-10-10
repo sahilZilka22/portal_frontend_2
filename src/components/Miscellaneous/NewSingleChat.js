@@ -29,14 +29,14 @@ import "./styles.css";
 import io from "socket.io-client";
 import AudioRecorder from '../Miscellaneous/AudioRecorder'
 
-const backend = 'https://backend-p1wy.onrender.com/api/v1'
+const backend = "https://dooper-backend.onrender.com/api/v1";
 const localbackend = "http://localhost:5001/api/v1"
 const api = axios.create({
-    baseURL: localbackend, // Replace with your backend URL
+    baseURL: backend, // Replace with your backend URL
 });
 
 
-const ENDPOINT = "http://localhost:5001/"
+const ENDPOINT = "https://dooper-backend.onrender.com/"
 var socket, selectedChatCompare;
 
 

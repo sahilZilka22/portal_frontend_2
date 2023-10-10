@@ -29,11 +29,11 @@ const GroupChatModal = ({children}) => {
         const { user, chats, setChats } = ChatState();
         const [loading, setLoading] = useState(false);
         const toast = useToast();
-        const backend = 'https://backend-p1wy.onrender.com/api/v1'
+        const backend = "https://dooper-backend.onrender.com/api/v1";
         const localbackend = "http://localhost:5001/api/v1"
 
         const api = axios.create({
-            baseURL: localbackend, // Replace with your backend URL
+            baseURL: backend, // Replace with your backend URL
         });
         
         const handleGroup = (userToAdd) => {
