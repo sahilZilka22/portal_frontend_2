@@ -32,11 +32,11 @@ import AudioRecorder from '../Miscellaneous/AudioRecorder'
 const backend = 'https://backend-p1wy.onrender.com/api/v1'
 const localbackend = "http://localhost:5001/api/v1"
 const api = axios.create({
-    baseURL: backend, // Replace with your backend URL
+    baseURL: localbackend, // Replace with your backend URL
 });
 
 
-const ENDPOINT = "https://backend-p1wy.onrender.com/"
+const ENDPOINT = "http://localhost:5001/"
 var socket, selectedChatCompare;
 
 
@@ -427,3 +427,11 @@ return (
 }
 
 export default NewSingleChat
+
+//Errors : 
+// Handle firebase auth errors
+// If user is not registered he can't login it still happens because the response is coming not the user
+// user when removed from the group still has his name in the group chat modal
+// when cicked on group notification crashes
+// Name and role in the chat - done
+// remove number from profile - done 

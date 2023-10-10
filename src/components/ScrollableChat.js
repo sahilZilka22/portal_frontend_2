@@ -3,6 +3,7 @@ import { Tooltip } from "@chakra-ui/tooltip";
 import ScrollableFeed from "react-scrollable-feed";
 import FileListComponent from "./UserComponents/FileListComponent";
 import {
+  isCurrentUser,
   isLastMessage,
   isSameSender,
   isSameSenderMargin,
@@ -12,149 +13,127 @@ import { ChatState } from "../Context/ChatProvider";
 
 const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();
- 
 
-  // return (
-  //   <ScrollableFeed>
-  //     {messages &&
-  //       messages.map((m, i) => (
-  //         <div style={{ display: "flex" }} key={m._id}>
-  //           {(isSameSender(messages, m, i, user._id) ||
-  //             isLastMessage(messages, i, user._id)) && (
-  //             <Tooltip label={m.sender.name} placement="bottom-start" hasArrow>
-  //               <Avatar
-  //                 mt="7px"
-  //                 mr={1}
-  //                 size="sm"
-  //                 cursor="pointer"
-  //                 name={m.sender.name}
-  //                 src={m.sender.photo}
-  //               />
-  //             </Tooltip>
-  //           )}
-  //           <div
-  //             style={{
-  //               backgroundColor: `${
-  //                 m.sender._id === user._id ? "#BEE3F8" : "#e84d6c"
-  //               }`,
-  //               marginLeft: isSameSenderMargin(messages, m, i, user._id),
-  //               marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
-  //               borderRadius: "20px",
-  //               padding: "5px 15px",
-  //               maxWidth: "75%",
-  //             }}
-  //           >
-  //             {m.message && (
-  //               <div>
-  //                 <p>{m.message}</p>
-  //               </div>
-  //             )}
-  //           </div>
-  //           <div style={{
-  //              display:"flex",
-  //              flexDirection:"column",
-  //              justifyContent:"center",
-  //              alignItems:"center",
-  //              alignContent:"center",
-  //             }}>
-  //             {m.content && m.content.length > 0 && (
-  //               <div>
-  //                 <div 
-  //                 style={{ margin: '5px' }}
-  //                 >
-  //                   <FileListComponent files={m.content} />
-  //                 </div>
-  //               </div>
-  //             )}
-  //           </div>
-  //         </div>
-  //       ))}
-  //   </ScrollableFeed>
-  // );
   return (
-  <ScrollableFeed>
-    {messages &&
-      messages.map((m, i) => (
-        <div style={{ display: "flex" }} key={m._id}>
-          {(isSameSender(messages, m, i, user._id) ||
-            isLastMessage(messages, i, user._id)) && (
-            <Tooltip label={m.sender.name} placement="bottom-start" hasArrow>
-              <Avatar
-                mt="7px"
-                mr={1}
-                size="sm"
-                cursor="pointer"
-                name={m.sender.name}
-                src={m.sender.photo}
-              />
-            </Tooltip>
-          )}
-          <div
+    <ScrollableFeed>
+      {messages &&
+        messages.map((m, i) => (
+          <div style={{ display: "flex" }} key={m._id}>
+            {(isSameSender(messages, m, i, user._id) ||
+              isLastMessage(messages, i, user._id)) && (
+              <Tooltip
+                label={
+                  m.sender && m.sender.name ? m.sender.name : "User not found"
+                }
+                placement="bottom-start"
+                hasArrow
+              >
+                <Avatar
+                  mt="7px"
+                  mr={1}
+                  size="sm"
+                  cursor="pointer"
+                  name={
+                    m.sender && m.sender.name ? m.sender.name : "User not found"
+                  }
+                  src={
+                    m.sender && m.sender.photo
+                      ? m.sender.photo
+                      : "User photo not found"
+                  }
+                />
+              </Tooltip>
+            )}
+            <div
               style={{
-                backgroundColor: m.sender._id === user._id ? "#BEE3F8" : "#e84d6c",
+                backgroundColor:
+                  m.sender && m.sender._id === user._id ? "#BEE3F8" : "#e84d6c",
                 borderRadius: "15px",
                 marginLeft: isSameSenderMargin(messages, m, i, user._id),
-                marginTop: isSameUser(messages, m, i, user._id) ? 3 : 10,
+                marginTop: isSameUser(messages, m, i) ? 3 : 10,
               }}
             >
               {m.message && (
                 <div>
-                  <p
+                  <div
+                    className="message-container"
                     style={{
-                      fontFamily: "sans-serif",
-                      fontWeight: 550,
-                      fontSize: "14px",
-                      fontStyle: "normal",
-                      marginBottom: "8px", // Add margin for spacing
-                      padding: "6px 8px", // Adjust padding for better alignment
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "start",
+                      justifyContent: "space-evenly",
                     }}
                   >
-                    {m.message}
-                  </p>
-                  {m.createdAt && (
-                    <div
+                    {!isCurrentUser(m.sender?._id || "", user._id) && (
+                      <h4
+                        style={{
+                          marginLeft: "10px",
+                          fontFamily: "sans-serif",
+                          padding: "2px",
+                          fontWeight: 500,
+                          fontSize: 13,
+                        }}
+                      >{`~${
+                        m.sender && m.sender.name
+                          ? m.sender.name
+                          : "User not found"
+                      } (${
+                        m.sender && m.sender.role ? m.sender.role : "--"
+                      })`}</h4>
+                    )}
+                    <p
                       style={{
-                        fontSize: "12px",
-                        color: "black",
+                        fontFamily: "sans-serif",
+                        fontWeight: 550,
+                        fontSize: "14px",
+                        fontStyle: "normal",
+                        marginBottom: "8px", // Add margin for spacing
                         padding: "6px 8px", // Adjust padding for better alignment
                       }}
                     >
-                      {new Date(m.createdAt).toLocaleString("en-IN", {
-                        timeZone: "Asia/Kolkata",
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
-                    </div>
-                  )}
+                      {m.message}
+                    </p>
+                    {m.createdAt && (
+                      <div
+                        style={{
+                          fontSize: "12px",
+                          color: "black",
+                          padding: "6px 8px", // Adjust padding for better alignment
+                        }}
+                      >
+                        {new Date(m.createdAt).toLocaleString("en-IN", {
+                          timeZone: "Asia/Kolkata",
+                          dateStyle: "short",
+                          timeStyle: "short",
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              alignContent: "center",
-            }}
-          >
-            {m.content && m.content.length > 0 && (
-              <div>
-                <div style={{ margin: "5px" }}>
-                  <FileListComponent files={m.content} />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                alignContent: "center",
+              }}
+            >
+              {m.content && m.content.length > 0 && (
+                <div>
+                  <div style={{ margin: "5px" }}>
+                    <FileListComponent files={m.content} />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+            <div>{/* Add the formatted createdAt */}</div>
           </div>
-          <div>
-             {/* Add the formatted createdAt */}
-           
-          </div>
-        </div>
-      ))}
-  </ScrollableFeed>
-);
-
+        ))}
+    </ScrollableFeed>
+  );
 };
 
 export default ScrollableChat;

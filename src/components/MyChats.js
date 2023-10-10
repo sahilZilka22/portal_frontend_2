@@ -12,26 +12,25 @@ import { getSender } from '../config/chatLogics';
 
 
 const MyChats = ({fetchAgain}) => {
-  const [loggedUser, setLoggedUser] = useState();
-  const {selectedChat,setSelectedChat,user,chats,setChats,} = ChatState();
-  const toast =  useToast();
-  const backend = 'https://backend-p1wy.onrender.com/api/v1'
-  const localbackend = "http://localhost:5001/api/v1"
+  const [loggedUser, setLoggedUser] = useState(null);
+  const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
+  const toast = useToast();
+  const backend = "https://backend-p1wy.onrender.com/api/v1";
+  const localbackend = "http://localhost:5001/api/v1";
 
   const api = axios.create({
-      baseURL: backend, // Replace with your backend URL
-    });
+    baseURL: localbackend, // Replace with your backend URL
+  });
 
-  const fetchChats = async() => {
+  const fetchChats = async () => {
     try {
       const config = {
-        headers : {
+        headers: {
           Authorization: `Bearer ${user.token}`,
-        }
-      }
-      const {data} = await api.get("/chat",config);
+        },
+      };
+      const { data } = await api.get("/chat", config);
       setChats(data);
-       
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -42,15 +41,15 @@ const MyChats = ({fetchAgain}) => {
         position: "bottom-left",
       });
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  },[fetchAgain]);
-  
-   return (
-     <Box
+  }, [fetchAgain]);
+
+  return (
+    <Box
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       flexDirection="column"
       alignItems="center"
@@ -106,15 +105,15 @@ const MyChats = ({fetchAgain}) => {
               >
                 <Text>
                   {!chat.isGroupChat
-                    ? getSender(loggedUser, chat.users)
+                    ? chat.users[0] && chat.users[1] // Check if both users exist
+                      ? getSender(loggedUser, chat.users)
+                      : "User not found"
                     : chat.chatName}
                 </Text>
                 {chat.latestMessage && (
                   <Text fontSize="xs">
-                     {/* <b>{chat.latestMessage.sender.name} : </b>
-                    {chat.latestMessage.message.length > 50? chat.latestMessage.message.substring(0, 51) + "..."
-                      : chat.latestMessage.message} */}
-                  </Text>   
+                    {/* Add your message display logic here */}
+                  </Text>
                 )}
               </Box>
             ))}

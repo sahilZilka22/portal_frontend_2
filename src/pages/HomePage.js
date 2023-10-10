@@ -12,13 +12,19 @@ import {
 import Loginbox from '../components/Authentication/Loginbox';
 import Signupbox from '../components/Authentication/Signupbox';
 import { useHistory } from "react-router-dom";
+import NewSignUpBox from '../components/Authentication/NewSignUpBox';
+import OTPverify from '../components/Authentication/OTPverify';
+import NewLoginBox from '../components/Authentication/NewLoginBox';
 
 const HomePage = () => {
   const history =useHistory();
-  useEffect(()=>{
-    const user = JSON.parse(localStorage.getItem("userInfo"));
-    if(user) history.push("/chats")
-  },[history])
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    if (userInfo && userInfo.status !== 404) {
+      history.push("/chats");
+    }
+  }, [history]);
+
   return (
     <Container maxW="xl" centerContent>
         <Box 
@@ -43,8 +49,9 @@ const HomePage = () => {
                 <Tab width='50%'>Sign Up!</Tab>
             </TabList>
             <TabPanels>
-                <TabPanel> <Loginbox/> </TabPanel>
-                <TabPanel> <Signupbox/> </TabPanel>
+                {/* <TabPanel> <Loginbox/> </TabPanel> */}
+                <TabPanel> <NewLoginBox/> </TabPanel>                
+                <TabPanel> <NewSignUpBox/> </TabPanel>                
             </TabPanels>
             </Tabs>
         </Box>
@@ -55,10 +62,3 @@ const HomePage = () => {
 
 export default HomePage
 
-/*
-
-tabpanel will contain the components to be shown
-
-
-
-*/

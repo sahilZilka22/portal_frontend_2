@@ -36,7 +36,7 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
      const localbackend = "http://localhost:5001/api/v1"
 
      const api = axios.create({
-         baseURL: backend, // Replace with your backend URL
+         baseURL: localbackend, // Replace with your backend URL
      });
 
      const handleAddUser =async(user1) => {
@@ -60,6 +60,7 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
             });
           return;
         }
+        console.log(selectedChat.groupAdmin._id);
         try {
             setLoading(true);
             const config = {
@@ -121,6 +122,8 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
      }
 
     const handleRemove = async(user1)=>{
+        console.log("hitting");
+        console.log(selectedChat.groupAdmin);
       if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
                 toast({
                     title: "Only admins can remove someone!",
@@ -131,6 +134,7 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                 });
             return;
     }
+    
         try {
             setLoading(true);
             const config = {
@@ -213,6 +217,7 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                   key={u._id}
                   user={u}
                   handleFunction={() => handleRemove(u)}
+                  admin={selectedChat.groupAdmin._id}
                 />
               ))}
             </Box>

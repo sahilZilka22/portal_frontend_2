@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Modal,
   ModalOverlay,
@@ -9,32 +9,42 @@ import {
   ModalCloseButton,
   IconButton,
   useDisclosure,
-  Image,Text
-} from '@chakra-ui/react'
-import { ViewIcon } from '@chakra-ui/icons'
+  Image,
+  Text,
+} from "@chakra-ui/react";
+import { ViewIcon } from "@chakra-ui/icons";
 
-const ProfileModal = ({user,children}) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-  
+const ProfileModal = ({ user, children }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleOpen = () => {
+    if (user) {
+      onOpen();
+    }
+  };
+
   return (
     <>
-    {children? (<span onClick={onOpen}>{children}</span>):
-    (<IconButton 
-    display={{base : 'flex'}}
-    icon={<ViewIcon/>} 
-    onClick={onOpen}> 
-    </IconButton>) }
+      {children ? (
+        <span onClick={handleOpen}>{children}</span>
+      ) : (
+        <IconButton
+          display={{ base: "flex" }}
+          icon={<ViewIcon />}
+          onClick={handleOpen}
+        ></IconButton>
+      )}
 
-    <Modal size="lg" onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal size="lg" onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent h="410px">
           <ModalHeader
-                fontSize="40px"
-                fontFamily="Work sans"
-                d="flex"
-                justifyContent="center">
-
-                {user.name}
+            fontSize="40px"
+            fontFamily="Work sans"
+            d="flex"
+            justifyContent="center"
+          >
+            {user ? user.name : "User not found"}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody
@@ -43,26 +53,30 @@ const ProfileModal = ({user,children}) => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Image
-             boxSize='150px'
-             objectFit='cover'
-             src='https://bit.ly/dan-abramov'
-             alt='Dan Abramov'
-            />
-            <Text
-              fontSize={{ base: "28px", md: "30px" }}
-              fontFamily="Work sans"
-            >
-              Email: {user.email}
-            </Text>
-            
+            {user && (
+              <Image
+                boxSize="150px"
+                objectFit="cover"
+                src="https://bit.ly/dan-abramov"
+                alt={user.name}
+              />
+            )}
+            {user ? (
+              <Text
+                fontSize={{ base: "28px", md: "30px" }}
+                fontFamily="Work sans"
+              >
+                Role: {user.role}
+              </Text>
+            ) : (
+              <Text>User not found</Text>
+            )}
           </ModalBody>
-          <ModalFooter>
-          </ModalFooter>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default ProfileModal;

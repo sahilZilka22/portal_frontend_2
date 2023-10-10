@@ -56,7 +56,7 @@ const SideDrawer = () => {
     const backend = 'https://backend-p1wy.onrender.com/api/v1'
     const localbackend = "http://localhost:5001/api/v1"
     const api = axios.create({
-      baseURL: backend, // Replace with your backend URL
+      baseURL: localbackend, // Replace with your backend URL
     });
 
   const handleSearch = async () => {
@@ -77,7 +77,7 @@ const SideDrawer = () => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await api.get(`/user/searchUsers?search=${search}`, config);
+      const { data } = await api.get(`/newuser/searchUsers?search=${search}`, config);
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -107,8 +107,6 @@ const SideDrawer = () => {
   };
 
   const accessChat = async (userId) => {
-    console.log(userId);
-
     try {
       setLoadingChat(true);
       const config = {
@@ -192,7 +190,7 @@ const SideDrawer = () => {
           </Menu>
           <Menu>
             <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
-              <Avatar size="sm" cursor="pointer" name={user.name} src={user.photo}></Avatar>
+              <Avatar size="sm" cursor="pointer" name={user.name} ></Avatar>
             </MenuButton>
             <MenuList>
              <ProfileModal user={user}> 
@@ -211,7 +209,7 @@ const SideDrawer = () => {
           <DrawerBody>
             <Box display="flex" pb={2}>
               <Input
-                placeholder="Search by name or email"
+                placeholder="Search by name "
                 mr={2}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}

@@ -33,7 +33,7 @@ const GroupChatModal = ({children}) => {
         const localbackend = "http://localhost:5001/api/v1"
 
         const api = axios.create({
-            baseURL: backend, // Replace with your backend URL
+            baseURL: localbackend, // Replace with your backend URL
         });
         
         const handleGroup = (userToAdd) => {
@@ -63,7 +63,10 @@ const GroupChatModal = ({children}) => {
                              Authorization: `Bearer ${user.token}`,
                         },
                     };
-                    const {data} = await api.get(`/user/searchUsers?search=${search}`, config);
+                    const { data } = await api.get(
+                      `/newuser/searchUsers?search=${search}`,
+                      config
+                    );
                     console.log(data);
                     setLoading(false);
                     setSearchResult(data);
