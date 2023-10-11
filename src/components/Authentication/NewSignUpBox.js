@@ -177,10 +177,24 @@ const NewSignUpBox = () => {
       setLoading(false);
       setShowOTP(true);
 
-      toast.success("OTP sent Successfully", { position: "bottom" });
+      toast({
+        title: "OTP sent",
+        description: "OTP send succesfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
     } catch (error) {
       setLoading(false);
-      toast.error(error.message, { position: "bottom" });
+        toast({
+          title: "Error Occured!",
+          description: "Failed to send the OTP",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
     }
   };
 
@@ -201,11 +215,23 @@ const NewSignUpBox = () => {
       }
     } catch (err) {
       if (err.code === "auth/invalid-verification-code") {
-        toast.error("Invalid OTP. Please enter a valid OTP.", {
-          position: "bottom",
-        });
+         toast({
+           title: "Error Occured!",
+           description: "Invalid OTP. Please enter a valid OTP.",
+           status: "error",
+           duration: 5000,
+           isClosable: true,
+           position: "bottom",
+         });
       } else {
-        toast.error(err.message, { position: "bottom" });
+          toast({
+            title: "Error Occured!",
+            description: err.message,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom",
+          });
       }
 
       setLoading(false);
