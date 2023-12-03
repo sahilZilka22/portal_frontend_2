@@ -145,94 +145,110 @@ const SideDrawer = () => {
   };
 
  return (
-    <>
-      <Box
-        display="flex" alignItems="center" justifyContent="space-between"
-        bg="white"
-        w="100%"
-        p="5px 10px 5px 10px"
-        borderWidth="5px"
-      >
-        <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
-          <Button variant="ghost"onClick={onOpen} >
-            <i className="fas fa-search"></i>
-            <Text display={{ base: "none", md: "flex" }} px={4}>
-              Search User
-            </Text>
-          </Button>
-        </Tooltip>
-        <Text fontSize="2xl" fontFamily="Work sans">
-          Dooper portal
-        </Text>
-        <div>
-          {/*This menu is for notificationj */}
-          <Menu>
-            <MenuButton position="relative" p={1}>
-              <BellIcon fontSize="2xl" m={1} />
-              <NotificationBadge notificationCount={notification.length}/>
-            </MenuButton>
-            <MenuList pl={2}>
-              {!notification.length && "No New Messages"}
-              {notification.map((notif) => (
-                <MenuItem
-                  key={notif._id}
-                  onClick={() => {
-                    setSelectedChat(notif.chat);
-                    setNotification(notification.filter((n) => n !== notif));
-                  }}
-                >
-                  {notif.chat.isGroupChat
-                    ? `New Message in ${notif.chat.chatName}`
-                    : `New Message: ${notif.message},  from ${getSender(user, notif.chat.users)}`}
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
-          <Menu>
-            <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
-              <Avatar size="sm" cursor="pointer" name={user.name} ></Avatar>
-            </MenuButton>
-            <MenuList>
-             <ProfileModal user={user}> 
-                <MenuItem>Profile</MenuItem>
+   <>
+     <Box
+       display="flex"
+       alignItems="center"
+       justifyContent="space-between"
+       bg="white"
+       w="100%"
+       p="5px 10px 5px 10px"
+       borderWidth="5px"
+     >
+       <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
+         <Button variant="ghost" onClick={onOpen}>
+           <i className="fas fa-search"></i>
+           <Text display={{ base: "none", md: "flex" }} px={4}>
+             Search User
+           </Text>
+         </Button>
+       </Tooltip>
+       <Text
+         fontSize="3xl"
+         ml={12}
+         fontFamily="'Bebas Neue', sans-serif"
+         color={"red.500"}
+       >
+         Dooper
+       </Text>
+       <div>
+         {/*This menu is for notificationj */}
+         <Menu>
+           <MenuButton position="relative" p={1}>
+             <BellIcon fontSize="2xl" m={1} />
+             <NotificationBadge notificationCount={notification.length} />
+           </MenuButton>
+           <MenuList pl={2}>
+             {!notification.length && "No New Messages"}
+             {notification.map((notif) => (
+               <MenuItem
+                 key={notif._id}
+                 onClick={() => {
+                   setSelectedChat(notif.chat);
+                   setNotification(notification.filter((n) => n !== notif));
+                 }}
+               >
+                 {notif.chat.isGroupChat
+                   ? `New Message in ${notif.chat.chatName}`
+                   : `New Message: ${notif.message},  from ${getSender(
+                       user,
+                       notif.chat.users
+                     )}`}
+               </MenuItem>
+             ))}
+           </MenuList>
+         </Menu>
+         <Menu>
+           <MenuButton as={Button} bg="white" rightIcon={<ChevronDownIcon />}>
+             <Avatar size="sm" cursor="pointer" name={user.name}></Avatar>
+           </MenuButton>
+           <MenuList>
+             <ProfileModal user={user}>
+               <MenuItem>Profile</MenuItem>
              </ProfileModal>
-              <MenuDivider />
-              <MenuItem onClick={logoutHandler} >Logout</MenuItem>
-            </MenuList>
-          </Menu>
-        </div>
-      </Box>
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">Search Users</DrawerHeader>
-          <DrawerBody>
-            <Box display="flex" pb={2}>
-              <Input
-                placeholder="Search by name "
-                mr={2}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <Button onClick={()=>handleSearch()}>Go</Button>
-            </Box>
-            {loading ? (
-              <ChatLoading />
-            ) : (
-              searchResult?.map((user) => (
-                <UserListItem
-                  key={user._id}
-                  user={user}
-                  handleFunction={() => accessChat(user._id)}
-                />
-              ))
-            )}
-            {loadingChat && <Spinner ml="auto" d="flex" />}
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </>
-  );
+             <MenuDivider />
+             <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+           </MenuList>
+         </Menu>
+       </div>
+     </Box>
+     <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+       <DrawerOverlay />
+       <DrawerContent>
+         <DrawerHeader borderBottomWidth="1px">Search Users</DrawerHeader>
+         <DrawerBody>
+           <Box display="flex" pb={2}>
+             <Input
+               placeholder="Search by name "
+               mr={2}
+               value={search}
+               onChange={(e) => setSearch(e.target.value)}
+             />
+             <Button
+               backgroundColor="red.500"
+               textColor={"white"}
+               onClick={() => handleSearch()}
+             >
+               Go
+             </Button>
+           </Box>
+           {loading ? (
+             <ChatLoading />
+           ) : (
+             searchResult?.map((user) => (
+               <UserListItem
+                 key={user._id}
+                 user={user}
+                 handleFunction={() => accessChat(user._id)}
+               />
+             ))
+           )}
+           {loadingChat && <Spinner ml="auto" d="flex" />}
+         </DrawerBody>
+       </DrawerContent>
+     </Drawer>
+   </>
+ );
   
 }
 

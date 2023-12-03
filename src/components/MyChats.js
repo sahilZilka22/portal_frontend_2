@@ -4,7 +4,7 @@ import { Box, Stack, Text} from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button } from "@chakra-ui/react";
+import { Button, Divider } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
 import ChatLoading from "../components/Miscellaneous/ChatlLoading";
 import GroupChatModal from "../components/Miscellaneous/GroupChatModal";
@@ -73,6 +73,8 @@ const MyChats = ({fetchAgain}) => {
         <GroupChatModal>
           <Button
             display="flex"
+            backgroundColor="#E6013F"
+            textColor={"white"}
             fontSize={{ base: "17px", md: "10px", lg: "17px" }}
             rightIcon={<AddIcon />}
           >
@@ -84,7 +86,7 @@ const MyChats = ({fetchAgain}) => {
         display="flex"
         flexDir="column"
         p={3}
-        bg="#F8F8F8"
+        bg="#FFEFF4"
         w="100%"
         h="100%"
         borderRadius="lg"
@@ -92,30 +94,34 @@ const MyChats = ({fetchAgain}) => {
       >
         {chats ? (
           <Stack overflowY="scroll">
-            {chats.map((chat) => (
-              <Box
-                onClick={() => setSelectedChat(chat)}
-                cursor="pointer"
-                bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
-                color={selectedChat === chat ? "white" : "black"}
-                px={3}
-                py={2}
-                borderRadius="lg"
-                key={chat._id}
-              >
-                <Text>
-                  {!chat.isGroupChat
-                    ? chat.users[0] && chat.users[1] // Check if both users exist
-                      ? getSender(loggedUser, chat.users)
-                      : "User not found"
-                    : chat.chatName}
-                </Text>
-                {chat.latestMessage && (
-                  <Text fontSize="xs">
-                    {/* Add your message display logic here */}
+            {chats.map((chat, index) => (
+              <React.Fragment key={chat._id}>
+                <Box
+                  onClick={() => setSelectedChat(chat)}
+                  cursor="pointer"
+                  bg={selectedChat === chat ? "#E6013F" : "#E8E8E8"}
+                  color={selectedChat === chat ? "white" : "black"}
+                  px={3}
+                  py={2}
+                  borderRadius="lg"
+                >
+                  <Text>
+                    {!chat.isGroupChat
+                      ? chat.users[0] && chat.users[1]
+                        ? getSender(loggedUser, chat.users)
+                        : "User not found"
+                      : chat.chatName}
                   </Text>
+                  {chat.latestMessage && (
+                    <Text fontSize="xs">
+                      {/* Add your message display logic here */}
+                    </Text>
+                  )}
+                </Box>
+                {index < chats.length - 1 && ( // Add Divider only if it's not the last item
+                  <Divider mt={2} mb={2} />
                 )}
-              </Box>
+              </React.Fragment>
             ))}
           </Stack>
         ) : (

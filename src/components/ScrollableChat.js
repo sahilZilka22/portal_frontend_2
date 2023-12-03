@@ -47,7 +47,7 @@ const ScrollableChat = ({ messages }) => {
             <div
               style={{
                 backgroundColor:
-                  m.sender && m.sender._id === user._id ? "#BEE3F8" : "#e84d6c",
+                  m.sender && m.sender._id === user._id ? "#FFD6E1" : "#F3F3F3",
                 borderRadius: "15px",
                 marginLeft: isSameSenderMargin(messages, m, i, user._id),
                 marginTop: isSameUser(messages, m, i) ? 3 : 10,
@@ -84,9 +84,10 @@ const ScrollableChat = ({ messages }) => {
                     <p
                       style={{
                         fontFamily: "sans-serif",
-                        fontWeight: 550,
-                        fontSize: "14px",
+                        fontWeight: 700,
+                        fontSize: "16px",
                         fontStyle: "normal",
+                        color:"black",
                         marginBottom: "8px", // Add margin for spacing
                         padding: "6px 8px", // Adjust padding for better alignment
                       }}

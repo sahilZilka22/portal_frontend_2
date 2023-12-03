@@ -172,6 +172,8 @@ const AudioRecorder = ({children,onAudioRecorded}) => {
        (<IconButton
         display={{base : "flex"}}
         icon={<Icon as={MdMic}/>}
+        backgroundColor="red.500"
+        color="white"
         onClick={onOpen}></IconButton>)
        }
       <Modal size="lg"   isOpen={isOpen} onClose={onClose} isCentered>

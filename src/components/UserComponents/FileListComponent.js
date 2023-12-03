@@ -35,45 +35,51 @@ const FileListComponent = ({ files }) => {
 
   return (
     <>
-     {files.map((file, index) => (
-        <div key={index} style={{ marginBottom: '10px', cursor: 'pointer' }}>
-          {file.file_type === 'image/jpeg' || file.file_type === 'image/png' ? (
-            <div onClick={() => openModal(file)}>
+      {files.map((file, index) => (
+        <div key={index} style={{ marginBottom: "10px", cursor: "pointer" }}>
+          {file.file_type === "image/jpeg" || file.file_type === "image/png" ? (
+            <div
+              style={{ backgroundColor: "white" }}
+              onClick={() => openModal(file)}
+            >
               <Tooltip label="Click to view" hasArrow>
                 <img
                   src={file.download_url}
                   style={{
-                    maxWidth: '250px',
-                    maxHeight: '200px',
-                    borderRadius: '8px',
-                    boxShadow: '0 0 5px rgba(0, 0, 0, 0.3)',
+                    maxWidth: "250px",
+                    maxHeight: "200px",
+                    borderRadius: "8px",
+                    boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
                   }}
                   alt="Image"
                 />
               </Tooltip>
             </div>
-          ) : file.file_type === 'video/mp4' ? (
-            <div onClick={() => openModal(file)}>
+          ) : file.file_type === "video/mp4" ? (
+            <div
+              style={{ backgroundColor: "white" }}
+              onClick={() => openModal(file)}
+            >
               <Tooltip label="Click to play video" hasArrow>
                 <div
                   style={{
-                    maxWidth: '250px',
-                    maxHeight: '200px',
-                    borderRadius: '8px',
-                    boxShadow: '0 0 5px rgba(0, 0, 0, 0.3)',
-                    backgroundColor: '#000',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'relative',
+                    maxWidth: "250px",
+                    maxHeight: "200px",
+                    borderRadius: "8px",
+                    boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+                    backgroundColor: "#000",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    position: "relative",
                   }}
                 >
                   {/* You can add a video thumbnail here */}
                   <img
                     src={videoThumbnailUrl} // Replace with video thumbnail URL
                     style={{
-                      maxWidth: '50%',
-                      maxHeight: '50%',
+                      maxWidth: "50%",
+                      maxHeight: "50%",
                     }}
                     alt="Video Thumbnail"
                   />
@@ -93,25 +99,26 @@ const FileListComponent = ({ files }) => {
                 </div>
               </Tooltip>
             </div>
-          ) : file.file_type === 'video/webm' || file.file_type === 'audio/mp3' ? (
-            <div style={{ maxWidth: '350px' }}>
+          ) : file.file_type === "video/webm" ||
+            file.file_type === "audio/mp3" ? (
+            <div style={{ maxWidth: "350px" }}>
               <ReactPlayer
                 url={file.download_url}
                 controls
                 width="100%"
-                height='100px'
+                height="100px"
               />
             </div>
           ) : (
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '5px',
-                maxWidth: 'auto',
-                backgroundColor: '#ed93e4',
-                borderRadius: '8px',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "5px",
+                maxWidth: "auto",
+                backgroundColor: "#ed93e4",
+                borderRadius: "8px",
               }}
             >
               {/* You can customize the file display here */}
@@ -121,7 +128,7 @@ const FileListComponent = ({ files }) => {
                   icon={<DownloadIcon />}
                   onClick={() => {
                     // Open the file in a new window for download
-                    const newWindow = window.open(file.download_url, '_blank');
+                    const newWindow = window.open(file.download_url, "_blank");
                     if (!newWindow) {
                       // If the pop-up was blocked, provide a direct link for download
                       window.location.href = file.download_url;
@@ -138,7 +145,6 @@ const FileListComponent = ({ files }) => {
           )}
         </div>
       ))}
-
 
       {/* Modal for Preview */}
       {/* <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={closeModal} size="xl">
@@ -192,48 +198,71 @@ const FileListComponent = ({ files }) => {
       </Modal> */}
 
       <Modal isOpen={isOpen} onClose={onClose} size="xl">
-      <ModalOverlay />
-      <ModalContent>
-        <ModalCloseButton position="absolute" right={2} top={2} color="white" bg="gray.500" _hover={{ bg: "gray.600" }} />
-        <ModalBody>
-          {selectedFile && (
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              height="80vh" // Adjust the height as needed
-            >
-              {isVideoFile ? (
-                <video controls style={{ maxWidth: "100%", maxHeight: "100%", borderRadius: "8px", boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)" }}>
-                  <source src={selectedFile.download_url} type={selectedFile.file_type} />
-                  Your browser does not support the video tag.
-                </video>
-              ) : selectedFile.file_type === "image/jpeg" || selectedFile.file_type === "image/png" ? (
-                <Zoom>
-                  <img
-                    src={selectedFile.download_url}
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton
+            position="absolute"
+            right={2}
+            top={2}
+            color="white"
+            bg="gray.500"
+            _hover={{ bg: "gray.600" }}
+          />
+          <ModalBody>
+            {selectedFile && (
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                height="80vh" // Adjust the height as needed
+              >
+                {isVideoFile ? (
+                  <video
+                    controls
                     style={{
                       maxWidth: "100%",
                       maxHeight: "100%",
-                      objectFit: "contain",
                       borderRadius: "8px",
                       boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
                     }}
-                  />
-                </Zoom>
-              ) : (
-                // Display other file types as download link
-                <div style={{ textAlign: "center" }}>
-                  <a href={selectedFile.download_url} download style={{ marginRight: "10px", fontSize: "18px" }}>
-                    Download File
-                  </a>
-                </div>
-              )}
-            </Box>
-          )}
-        </ModalBody>
-      </ModalContent>
-    </Modal> 
+                  >
+                    <source
+                      src={selectedFile.download_url}
+                      type={selectedFile.file_type}
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : selectedFile.file_type === "image/jpeg" ||
+                  selectedFile.file_type === "image/png" ? (
+                  <Zoom>
+                    <img
+                      src={selectedFile.download_url}
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        objectFit: "contain",
+                        borderRadius: "8px",
+                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+                      }}
+                    />
+                  </Zoom>
+                ) : (
+                  // Display other file types as download link
+                  <div style={{ textAlign: "center" }}>
+                    <a
+                      href={selectedFile.download_url}
+                      download
+                      style={{ marginRight: "10px", fontSize: "18px" }}
+                    >
+                      Download File
+                    </a>
+                  </div>
+                )}
+              </Box>
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

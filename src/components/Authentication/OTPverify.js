@@ -9,6 +9,7 @@ const OTPverify = ({OTPverify}) => {
 
   const handleVerifyOTP = () => {
       OTPverify(otp);
+      setOTP("")
   };
   
   return (
@@ -38,7 +39,7 @@ const OTPverify = ({OTPverify}) => {
       <Button
         onClick={handleVerifyOTP}
         mt="2"
-        colorScheme="blue"
+        colorScheme="red"
         width="70%"
         style={{ marginTop: 15 }}
       >

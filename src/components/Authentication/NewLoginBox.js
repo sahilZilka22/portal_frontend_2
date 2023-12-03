@@ -3,7 +3,7 @@ import { ChatState } from "../../Context/ChatProvider";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
-import { useToast } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
 import {
   Button,
   FormControl,
@@ -187,40 +187,42 @@ const NewLoginBox = () => {
 
   return (
     <>
-      <div id="recaptcha-container" style={{display:"flex"}}></div>
-      {showOTP ? (
-        <>
-          <OTPverify OTPverify={OTPVerify} />
-        </>
-      ) : (
-        <>
-          <VStack>
-            <FormControl id="phoneNumber" isRequired>
-              <FormLabel>Phone Number</FormLabel>
-              <InputGroup>
-                <InputLeftAddon children="+91" />
-                <Input
-                  type="tel"
-                  maxLength={10}
-                  placeholder="Phone number"
-                  _placeholder={{ opacity: 2, color: "black" }}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                />
-              </InputGroup>
-            </FormControl>
+      <Box height={400} overflowY="scroll">
+        <div id="recaptcha-container" style={{ display: "flex" }}></div>
+        {showOTP ? (
+          <>
+            <OTPverify OTPverify={OTPVerify} />
+          </>
+        ) : (
+          <>
+            <VStack>
+              <FormControl id="phoneNumber" isRequired>
+                <FormLabel>Phone Number</FormLabel>
+                <InputGroup>
+                  <InputLeftAddon children="+91" />
+                  <Input
+                    type="tel"
+                    maxLength={10}
+                    placeholder="Phone number"
+                    _placeholder={{ opacity: 2, color: "black" }}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                  />
+                </InputGroup>
+              </FormControl>
 
-            <Button
-              colorScheme="blue"
-              width="100%"
-              style={{ marginTop: 15 }}
-              onClick={onSignUp}
-              isLoading={process}
-            >
-              Login
-            </Button>
-          </VStack>
-        </>
-      )}
+              <Button
+                colorScheme="red"
+                width="100%"
+                style={{ marginTop: 15 }}
+                onClick={onSignUp}
+                isLoading={process}
+              >
+                Login
+              </Button>
+            </VStack>
+          </>
+        )}
+      </Box>
     </>
   );
 };

@@ -39,6 +39,7 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
          baseURL: backend, // Replace with your backend URL
      });
 
+     console.log(searchResult);
      const handleAddUser =async(user1) => {
         if(selectedChat.users.find((u)=> u._id === user1._id)){
             toast({
@@ -98,6 +99,7 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
         if(!query){
             return;
         }
+        console.log(search);
         try {
             setLoading(true);
             const config = {
@@ -105,8 +107,8 @@ const UpdateGroupChatModal = ({fetchAgain,setFetchAgain,fetchMessages}) => {
                      Authorization: `Bearer ${user.token}`,
                 },
             };
-            const {data} = await api.get(`/user/searchUsers?search=${search}`, config);
-
+            const {data} = await api.get(`/newuser/searchUsers?search=${search}`, config);
+            console.log(data);
             setLoading(false);
             setSearchResult(data);
         } catch (error) {

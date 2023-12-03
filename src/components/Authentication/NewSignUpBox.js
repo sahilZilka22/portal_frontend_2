@@ -13,6 +13,7 @@ import {
   Stack,
   RadioGroup,
   Toast,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import React from "react";
 import { useState } from "react";
@@ -36,8 +37,9 @@ const NewSignUpBox = () => {
   const backend = "https://dooper-backend.onrender.com/api/v1";
   const localbackend = "http://localhost:5001/api/v1";
 
-  const submitHandler = async (name, ph, role) => {
+  const submitHandler = async () => {
     setPicloading(true);
+    console.log(name,ph,role);
     if (!name || !ph || !role) {
       toast({
         title: "Please Fill all the feilds",
@@ -47,10 +49,12 @@ const NewSignUpBox = () => {
         position: "bottom",
       });
       setPicloading(false);
+      console.log("just left this");
       return;
     }
 
     try {
+      console.log("sending");
       const config = {
         headers: {
           "Content-type": "application/json",
@@ -77,9 +81,11 @@ const NewSignUpBox = () => {
       localStorage.setItem("userInfo", JSON.stringify(data));
       setPicloading(false);
       history.push("/chats");
+      console.log(data);
       return data;
     } catch (error) {
       if (error.response) {
+        console.log(error);
         toast({
           title: "Error Occured!",
           description: error.response.data.message,
@@ -89,6 +95,7 @@ const NewSignUpBox = () => {
           position: "bottom",
         });
       } else {
+        console.log(error);
         // network errors
         toast({
           title: "Error Occured from the servers!",
@@ -161,11 +168,11 @@ const NewSignUpBox = () => {
     );
   }
 
-  const onSignUp = async (name, ph, role) => {
+  const onSignUp = async () => {
     setLoading(true);
-
+    onCaptchaVerify();
     const formatPh = "+91" + ph;
-
+    console.log(formatPh);
     try {
       const confirmationResult = await signInWithPhoneNumber(
         firebaseAuth,
@@ -187,25 +194,26 @@ const NewSignUpBox = () => {
       });
     } catch (error) {
       setLoading(false);
-        toast({
-          title: "Error Occured!",
-          description: "Failed to send the OTP",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "bottom",
-        });
+      console.log(error);
+      toast({
+        title: "Error Occured!",
+        description: "Failed to send the OTP",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
     }
   };
 
-  const OTPVerify = async (otp, name, ph, role) => {
+  const OTPVerify = async (otp) => {
     setLoading(true);
 
     try {
       const res = await window.confirmationResult.confirm(otp);
       setLoading(false);
 
-      // Check if the user exists or take necessary action
+      // Check if the user exists or take necessary ac tion
       const user = await submitHandler(name, ph, role);
       if (user) {
         setShowOTP(false);
@@ -215,23 +223,23 @@ const NewSignUpBox = () => {
       }
     } catch (err) {
       if (err.code === "auth/invalid-verification-code") {
-         toast({
-           title: "Error Occured!",
-           description: "Invalid OTP. Please enter a valid OTP.",
-           status: "error",
-           duration: 5000,
-           isClosable: true,
-           position: "bottom",
-         });
+        toast({
+          title: "Error Occured!",
+          description: "Invalid OTP. Please enter a valid OTP.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
       } else {
-          toast({
-            title: "Error Occured!",
-            description: err.message,
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-            position: "bottom",
-          });
+        toast({
+          title: "Error Occured!",
+          description: err.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
       }
 
       setLoading(false);
@@ -264,7 +272,10 @@ const NewSignUpBox = () => {
                   maxLength={10}
                   placeholder="Phone number"
                   _placeholder={{ opacity: 2, color: "black" }}
-                  onChange={(e) => setph(e.target.value)}
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    setph(e.target.value)
+                  }}
                 />
               </InputGroup>
             </FormControl>
@@ -277,31 +288,24 @@ const NewSignUpBox = () => {
                 onChange={(e) => postDetails(e.target.files[0])}
               />
             </FormControl>
-            <Box display="flex" flexDirection="column" alignItems="center">
-              <Heading as="h5" size="sm">
+            <Box textAlign="center">
+              <Heading as="h6" size="sm" mb={2}>
                 Select the user type
               </Heading>
-              <RadioGroup
-                onChange={setRole}
-                value={role}
-                direction={["column", "row"]}
-                colorScheme="red"
-              >
-                {/* Use column direction on small screens and row direction on larger screens */}
-                <Stack direction={["column", "row"]} spacing={2}>
+              <RadioGroup onChange={setRole} value={role} colorScheme="red">
+                <SimpleGrid columns={[1, 2, 3]} spacing={4} alignItems="center">
                   <Radio value="DOCTOR">Doctor</Radio>
                   <Radio value="DOOPER">Dooper</Radio>
                   <Radio value="DHA">DHA</Radio>
-                </Stack>
-                <Stack direction={["column", "row"]} spacing={2}>
                   <Radio value="LAB">Lab</Radio>
                   <Radio value="PHARMACY">Pharmacy</Radio>
                   <Radio value="USER">User</Radio>
-                </Stack>
+                </SimpleGrid>
               </RadioGroup>
             </Box>
+
             <Button
-              colorScheme="blue"
+              colorScheme="red"
               width="100%"
               style={{ marginTop: 15 }}
               onClick={onSignUp}
