@@ -18,7 +18,7 @@ import {Avatar,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  useDisclosure,Input,Spinner
+  useDisclosure,Input,Spinner, Image
 } from "@chakra-ui/react"
 import { Tooltip } from "@chakra-ui/tooltip";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
@@ -163,19 +163,19 @@ const SideDrawer = () => {
            </Text>
          </Button>
        </Tooltip>
-       <Text
-         fontSize="3xl"
-         ml={12}
-         fontFamily="'Bebas Neue', sans-serif"
-         color={"red.500"}
-       >
-         Dooper
-       </Text>
+       {/* Replace Text with Image */}
+         <Image
+         src="https://cloud.appwrite.io/v1/storage/buckets/650443d58db969add1ca/files/65631808db0c623d2311/view?project=64fbff681fc58dbffca3&mode=admin" // Replace with the path to your company logo image
+         alt="Company Logo"
+         boxSize="auto"
+         maxH="28px"
+         ml={4}
+       />
        <div>
          {/*This menu is for notificationj */}
          <Menu>
            <MenuButton position="relative" p={1}>
-             <BellIcon fontSize="2xl" m={1} />
+             <BellIcon fontSize="xl" m={1} />
              <NotificationBadge notificationCount={notification.length} />
            </MenuButton>
            <MenuList pl={2}>
@@ -211,6 +211,7 @@ const SideDrawer = () => {
            </MenuList>
          </Menu>
        </div>
+       
      </Box>
      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
        <DrawerOverlay />

@@ -52,7 +52,7 @@ const api = axios.create({
   baseURL: backend, // Replace with your backend URL
 });
 
-const ENDPOINT = "https://dooper-backend.onrender.com/"; //"http://localhost:5001/"
+const ENDPOINT = "https://dooper-backend.onrender.com/"; //"http://localhost:5001/" -- https://dooper-backend.onrender.com/
 var socket, selectedChatCompare;
 
 const NewSingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -244,7 +244,6 @@ const NewSingleChat = ({ fetchAgain, setFetchAgain }) => {
     });
   });
 
-  const paleGreenColor = useColorModeValue("green.500", "green.200");
 
   return (
     <>
